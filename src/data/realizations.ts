@@ -8,12 +8,6 @@ export type Realization = {
   imageAlt: string;
 };
 
-/**
- * Zostaw pustą tablicę, dopóki nie ma udokumentowanej naprawy i prawdziwego zdjęcia.
- * Nie dopisuj tu wymyślonych zleceń.
- */
-export const realizations: Realization[] = [];
-
 export const mediaSlots = [
   {
     id: "warsztat",

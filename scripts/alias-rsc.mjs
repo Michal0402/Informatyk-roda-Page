@@ -20,4 +20,11 @@ async function walk(dir) {
   );
 }
 
-await walk(outDir);
+try {
+  await walk(outDir);
+} catch (error) {
+  if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") {
+    process.exit(0);
+  }
+  throw error;
+}

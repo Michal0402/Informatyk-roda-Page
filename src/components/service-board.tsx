@@ -1,34 +1,40 @@
 import type { ReactNode } from "react";
-import type { LucideIcon } from "lucide-react";
 
 export function ServiceBoard({
+  sticker,
   title,
   sentence,
   art,
   items,
 }: {
+  sticker: string;
   title: string;
   sentence: string;
   art: ReactNode;
-  items: { id: string; title: string; icon: LucideIcon }[];
+  items: { id: string; title: string }[];
 }) {
   return (
-    <article className="mx-auto max-w-5xl px-4 py-10 md:px-6">
-      <div className="tile grid items-center gap-4 p-5 sm:grid-cols-[200px_1fr]">
-        <div className="mx-auto w-40">{art}</div>
-        <div>
-          <h1 className="text-4xl font-semibold tracking-tight text-balance">{title}</h1>
-          <p className="mt-3 text-muted">{sentence}</p>
+    <article>
+      <header className="bg-ink text-canvas">
+        <div className="mx-auto grid min-h-[46vh] max-w-[1180px] items-end gap-8 px-5 py-14 md:grid-cols-[1fr_220px] md:px-8 md:py-20">
+          <div>
+            <p className="sticker w-fit text-5xl sm:text-7xl">{sticker}</p>
+            <h1 className="mt-8 max-w-[18ch] font-display text-4xl leading-[1.02] font-extrabold tracking-tight text-balance sm:text-5xl">
+              {title}
+            </h1>
+            <p className="mt-4 max-w-[42ch] text-lg">{sentence}</p>
+          </div>
+          <div className="w-40 text-canvas md:w-full">{art}</div>
         </div>
-      </div>
-      <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-        {items.map((item) => (
-          <li key={item.id} id={item.id} className="tile flex items-center gap-3 p-4">
-            <item.icon aria-hidden strokeWidth={1.5} className="size-6 shrink-0 text-accent-deep" />
-            <span className="font-medium">{item.title}</span>
+      </header>
+      <ol className="mx-auto max-w-[1180px] border-b border-ink">
+        {items.map((item, index) => (
+          <li id={item.id} key={item.id} className="flex items-baseline gap-5 border-t border-ink px-5 py-6 md:gap-8 md:px-8">
+            <span className="font-display text-xl font-bold tabular-nums">{String(index + 1).padStart(2, "0")}</span>
+            <span className="font-display text-2xl font-bold tracking-tight sm:text-4xl">{item.title}</span>
           </li>
         ))}
-      </ul>
+      </ol>
     </article>
   );
 }

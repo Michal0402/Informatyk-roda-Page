@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
-import { company, publicationReady } from "@/config/company";
+import { publicationReady } from "@/config/company";
+import { getSiteContent } from "@/lib/content";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 const paths = [
   "/",
@@ -11,7 +12,8 @@ const paths = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  if (!publicationReady()) return [];
+  const { company } = getSiteContent();
+  if (!publicationReady(company)) return [];
   const base = `https://${company.domain.replace(/\/$/, "")}`;
   return paths.map((path) => ({
     url: path === "/" ? `${base}/` : `${base}${path}`,

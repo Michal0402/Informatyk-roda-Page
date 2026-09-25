@@ -1,183 +1,245 @@
-import {
-  HardDrive,
-  MonitorOff,
-  Phone,
-  Plug,
-  Thermometer,
-} from "lucide-react";
 import Link from "next/link";
-import { BatteryArt, DiskArt, LaptopArt, PhoneArt, ScreenArt } from "@/components/art/devices";
-import { company, hasConfirmedEmail, hasConfirmedPhone } from "@/config/company";
-import { faq } from "@/data/faq";
-import { priceLabel, pricing } from "@/data/pricing";
-import { realizations } from "@/data/realizations";
-import { symptoms } from "@/data/symptoms";
-import { callHref } from "@/lib/site";
+import { BatteryArt, DiskArt, LaptopArt, PhoneArt, ScreenArt, BoardArt } from "@/components/art/devices";
+import { callHref, hasConfirmedEmail, hasConfirmedPhone } from "@/config/company";
+import { priceLabel } from "@/data/pricing";
+import { getSiteContent } from "@/lib/content";
 
-const symptomIcons = {
-  "nie-laduje": Plug,
-  "pekniety-ekran": Phone,
-  temperatura: Thermometer,
-  "brak-obrazu": MonitorOff,
-  "wolny-system": HardDrive,
-  "utracone-dane": HardDrive,
-} as const;
+const offers = [
+  {
+    id: "komputery",
+    index: "01",
+    title: "Komputery",
+    text: "Brak obrazu, brak startu, temperatura, dysk, pamięć i składanie PC.",
+    href: "/serwis-komputerowy-sroda-wielkopolska",
+    link: "Zobacz zakres komputerów",
+  },
+  {
+    id: "laptopy",
+    index: "02",
+    title: "Laptopy",
+    text: "Obraz, chłodzenie, dysk, klawiatura, zawiasy i bateria. Wycena po modelu.",
+    href: "/naprawa-laptopow-sroda-wielkopolska",
+    link: "Zobacz zakres laptopów",
+  },
+  {
+    id: "telefony",
+    index: "03",
+    title: "Telefony",
+    text: "iPhone i Android: wyświetlacz, bateria, ładowanie, dźwięk, zalanie.",
+    href: "/serwis-telefonow-sroda-wielkopolska",
+    link: "Zobacz zakres telefonów",
+  },
+] as const;
 
-const steps = [
-  { label: "Kontakt", art: PhoneArt },
-  { label: "Diagnoza", art: ScreenArt },
-  { label: "Wycena", art: BatteryArt },
-  { label: "Naprawa", art: DiskArt },
+const frames = [
+  { id: "laptop", label: "Laptop", art: LaptopArt },
+  { id: "telefon", label: "Telefon", art: PhoneArt },
+  { id: "komputer", label: "Komputer", art: BoardArt },
+  { id: "ekran", label: "Wyświetlacz", art: ScreenArt },
+  { id: "dysk", label: "Dysk", art: DiskArt },
+  { id: "bateria", label: "Bateria", art: BatteryArt },
 ];
 
+const ribbon = "serwis komputerowy Środa · naprawa laptopów · serwis telefonów";
+
 export function HomePage() {
+  const { company, faq, pricing, pricingNote, realizations } = getSiteContent();
   return (
     <>
-      <section className="mx-auto grid max-w-6xl items-center gap-8 px-4 pt-8 pb-10 md:px-6 lg:grid-cols-[1fr_1.05fr] lg:pt-14">
-        <div>
-          <h1 className="max-w-[16ch] text-4xl leading-[1.05] font-semibold tracking-tight text-balance sm:text-5xl">
+      <section className="relative bg-ink text-canvas">
+        <div className="mx-auto flex min-h-[78vh] max-w-[1180px] flex-col px-5 pt-8 pb-12 md:px-8 md:pb-16">
+          <div className="relative min-h-[46vh] flex-1">
+            <span className="sticker absolute top-[6%] right-0 text-5xl sm:text-7xl lg:text-8xl">komputer</span>
+            <span className="sticker absolute top-[38%] left-0 text-5xl sm:text-7xl lg:text-8xl">albo</span>
+            <span className="sticker absolute top-[62%] left-[18%] text-5xl sm:text-7xl sm:left-[28%] lg:text-8xl">telefon</span>
+            <LaptopArt className="absolute right-[6%] bottom-[4%] hidden h-36 w-56 text-canvas md:block" />
+            <PhoneArt className="absolute right-[2%] bottom-[18%] hidden h-40 w-24 text-canvas lg:block" />
+          </div>
+          <h1 className="max-w-[16ch] font-display text-4xl leading-[1.02] font-extrabold tracking-tight text-balance sm:text-5xl">
             Serwis komputerowy i GSM w Środzie Wielkopolskiej
           </h1>
-          <p className="mt-4 max-w-[28ch] text-lg text-muted">
+          <p className="mt-4 max-w-[34ch] text-lg">
             Komputer lub telefon przestał działać? Sprawdzimy, co się stało.
           </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <a href={callHref()} className="rounded-full bg-accent px-5 py-3 text-sm font-semibold text-accent-ink">
-              Zadzwoń
-            </a>
-            <a href="#uslugi" className="rounded-full border border-line bg-card px-5 py-3 text-sm font-semibold text-ink">
-              Zobacz usługi
-            </a>
-          </div>
-        </div>
-        <div className="tile relative grid min-h-64 grid-cols-[1.3fr_0.7fr] items-end gap-2 overflow-hidden p-4 sm:min-h-80 sm:p-6">
-          <LaptopArt className="h-40 w-full sm:h-52" />
-          <PhoneArt className="h-36 w-full justify-self-end sm:h-48" />
         </div>
       </section>
 
-      <section id="uslugi" className="mx-auto max-w-6xl px-4 pb-8 md:px-6">
-        <div className="grid gap-3 lg:grid-cols-[1.3fr_0.7fr]">
-          <Link href="/serwis-komputerowy-sroda-wielkopolska" className="tile tile-link grid items-end gap-2 p-5 sm:grid-cols-[1fr_180px]">
-            <div>
-              <h2 className="text-2xl font-semibold">Komputer lub laptop</h2>
-              <p className="mt-1 text-sm text-muted">Obraz, start, temperatura, dysk.</p>
-            </div>
-            <LaptopArt className="h-28 w-full" />
-          </Link>
-          <Link href="/serwis-telefonow-sroda-wielkopolska" className="tile tile-link flex flex-col justify-between p-5">
-            <h2 className="text-2xl font-semibold">Telefon</h2>
-            <PhoneArt className="mx-auto h-32" />
-            <p className="text-sm text-muted">Ekran, bateria, ładowanie.</p>
-          </Link>
+      <section className="mx-auto grid max-w-[1180px] gap-8 px-5 py-16 md:grid-cols-[1fr_auto] md:items-end md:px-8 md:py-24">
+        <div>
+          <h2 className="max-w-[16ch] font-display text-4xl leading-none font-extrabold tracking-tight sm:text-5xl">
+            Najpierw diagnoza, potem decyzja
+          </h2>
+          <p className="mt-5 max-w-[48ch] text-lg">
+            Komputery, laptopy i telefony w {company.city}. Cenę podajemy po ustaleniu usterki. O naprawie decydujesz Ty.
+          </p>
         </div>
-        <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {symptoms.map((item) => {
-            const Icon = symptomIcons[item.id as keyof typeof symptomIcons] ?? Plug;
-            return (
-              <li key={item.id}>
-                <Link href={item.href} className="tile tile-link flex h-full flex-col gap-3 p-4">
-                  <Icon aria-hidden strokeWidth={1.5} className="size-6 text-accent-deep" />
-                  <span className="font-medium">{item.title}</span>
+        <a href="#uslugi" className="w-fit border-b-2 border-ink pb-1 font-display text-lg font-bold lowercase">
+          sprawdź, co naprawiamy
+        </a>
+      </section>
+
+      <section className="border-y border-ink" aria-label="Zasady pracy">
+        <ul className="mx-auto grid max-w-[1180px] md:grid-cols-3">
+          <li className="border-b border-ink px-5 py-10 md:border-r md:border-b-0 md:px-8">
+            <h2 className="font-display text-3xl leading-none font-extrabold tracking-tight sm:text-4xl">Diagnoza przed naprawą</h2>
+            <p className="mt-4 max-w-[28ch]">Najpierw ustalamy, co nie działa. Wycena jest przed decyzją.</p>
+          </li>
+          <li className="border-b border-ink px-5 py-10 md:border-r md:border-b-0 md:px-8">
+            <h2 className="font-display text-3xl leading-none font-extrabold tracking-tight sm:text-4xl">Komputer i telefon</h2>
+            <p className="mt-4 max-w-[28ch]">PC, laptop i telefon w jednym miejscu. Cena zależy od modelu i części.</p>
+          </li>
+          <li className="px-5 py-10 md:px-8">
+            <h2 className="font-display text-3xl leading-none font-extrabold tracking-tight sm:text-4xl">{company.city}</h2>
+            <p className="mt-4 max-w-[28ch]">
+              Lokalnie. Okolice ({company.nearbyToConfirm.join(", ")}) potwierdzamy przy kontakcie. Bez obietnicy dojazdu.
+            </p>
+          </li>
+        </ul>
+      </section>
+
+      <section id="uslugi" className="mx-auto max-w-[1180px] px-5 py-16 md:px-8 md:py-24">
+        <h2 className="max-w-[14ch] font-display text-4xl leading-none font-extrabold tracking-tight sm:text-6xl">
+          Sprawdź, co możemy zrobić
+        </h2>
+        <div className="mt-10 border-b border-ink">
+          {offers.map((offer, index) => (
+            <details key={offer.id} open={index === 0 || undefined} className="group border-t border-ink">
+              <summary className="flex cursor-pointer list-none items-baseline gap-4 py-6 marker:content-none md:gap-8 [&::-webkit-details-marker]:hidden">
+                <span className="font-display text-xl font-bold tabular-nums">{offer.index}</span>
+                <span className="font-display text-3xl font-extrabold tracking-tight sm:text-5xl">{offer.title}</span>
+              </summary>
+              <div className="max-w-[52ch] pb-8 pl-12 md:pl-16">
+                <p>{offer.text}</p>
+                <Link href={offer.href} className="mt-4 inline-block border-b-2 border-ink font-display font-bold lowercase">
+                  {offer.link}
                 </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-4 py-8 md:px-6">
-        <h2 className="text-2xl font-semibold">Jak wygląda naprawa</h2>
-        <ol className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {steps.map((step) => (
-            <li key={step.label} className="tile flex flex-col items-start gap-2 p-4">
-              <step.art className="h-16 w-full" />
-              <span className="font-medium">{step.label}</span>
-            </li>
+              </div>
+            </details>
           ))}
-        </ol>
-        <p className="mt-3 text-sm text-muted">Po wycenie decydujesz, czy idziemy dalej.</p>
+          <details className="group border-t border-ink">
+            <summary className="flex cursor-pointer list-none items-baseline gap-4 py-6 marker:content-none md:gap-8 [&::-webkit-details-marker]:hidden">
+              <span className="font-display text-xl font-bold tabular-nums">04</span>
+              <span className="font-display text-3xl font-extrabold tracking-tight sm:text-5xl">Wycena</span>
+            </summary>
+            <div className="max-w-[52ch] pb-8 pl-12 md:pl-16">
+              <p>{pricingNote}</p>
+              <a href="#cennik" className="mt-4 inline-block border-b-2 border-ink font-display font-bold lowercase">
+                zobacz cennik
+              </a>
+            </div>
+          </details>
+          <details className="group border-t border-ink">
+            <summary className="flex cursor-pointer list-none items-baseline gap-4 py-6 marker:content-none md:gap-8 [&::-webkit-details-marker]:hidden">
+              <span className="font-display text-xl font-bold tabular-nums">05</span>
+              <span className="font-display text-3xl font-extrabold tracking-tight sm:text-5xl">Obszar</span>
+            </summary>
+            <div className="max-w-[52ch] pb-8 pl-12 md:pl-16">
+              <p>
+                {company.serviceArea.join(", ")}. Miejscowości do potwierdzenia: {company.nearbyToConfirm.join(", ")}. Odbioru sprzętu nie oferujemy.
+              </p>
+            </div>
+          </details>
+        </div>
       </section>
 
-      <section id="cennik" className="mx-auto max-w-6xl px-4 py-8 md:px-6">
-        <h2 className="text-2xl font-semibold">Cennik</h2>
-        <p className="mt-2 max-w-[52ch] text-sm text-muted">Cena zależy od części i usterki. Puste pole znaczy wycenę po diagnozie.</p>
-        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-          {pricing.map((item) => (
-            <li key={item.id} className="tile flex items-center justify-between gap-3 p-4">
-              <span className="font-medium">{item.name}</span>
-              <span className="shrink-0 font-mono text-sm text-accent-deep">{priceLabel(item.amount)}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section id="realizacje" className="mx-auto max-w-6xl px-4 py-6 md:px-6">
-        <h2 className="text-2xl font-semibold">Realizacje</h2>
-        {realizations.length === 0 ? (
-          <div className="tile mt-4 grid items-center gap-4 p-5 sm:grid-cols-[160px_1fr]">
-            <DiskArt className="h-24 w-full" />
-            <p className="text-sm text-muted">Zdjęcia konkretnych napraw pojawią się tu dopiero, gdy będą. Na razie zakres jest w usługach.</p>
-          </div>
-        ) : (
-          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-            {realizations.map((item) => (
-              <li key={item.id} className="tile overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={item.image} alt={item.imageAlt} className="aspect-[16/10] w-full object-cover" />
-                <p className="p-4 font-medium">{item.title}</p>
+      <section id="cennik" className="border-t border-ink">
+        <div className="mx-auto max-w-[1180px] px-5 py-16 md:px-8 md:py-24">
+          <h2 className="font-display text-4xl font-extrabold tracking-tight sm:text-6xl">Cennik</h2>
+          <p className="mt-4 max-w-[52ch]">{pricingNote}</p>
+          <ul className="mt-8 border-y border-ink">
+            {pricing.map((item) => (
+              <li key={item.id} className="flex flex-col gap-2 border-b border-ink py-5 last:border-b-0 sm:flex-row sm:items-baseline sm:justify-between">
+                <div>
+                  <p className="font-display text-xl font-bold">{item.name}</p>
+                  <p className="mt-1 max-w-[58ch] text-sm">{item.detail}</p>
+                </div>
+                <p className="shrink-0 font-display font-bold">{priceLabel(item.amount)}</p>
               </li>
             ))}
           </ul>
-        )}
-      </section>
-
-      <section className="mx-auto grid max-w-6xl gap-3 px-4 py-6 md:grid-cols-2 md:px-6">
-        <div className="tile p-5">
-          <h2 className="text-xl font-semibold">Środa Wielkopolska</h2>
-          <p className="mt-2 text-sm text-muted">Lokalnie. Okolice potwierdzamy przy kontakcie. Bez obietnicy dojazdu.</p>
-        </div>
-        <div className="tile p-5">
-          <h2 className="text-xl font-semibold">Bez formularza</h2>
-          <p className="mt-2 text-sm text-muted">Dzwonisz, opisujesz objaw, dostajesz wycenę przed naprawą.</p>
         </div>
       </section>
 
-      <section id="faq" className="mx-auto max-w-3xl px-4 py-8 md:px-6">
-        <h2 className="text-2xl font-semibold">Pytania</h2>
-        <div className="mt-4 divide-y divide-line border-y border-line">
+      <section id="realizacje" className="border-t border-ink">
+        <div className="mx-auto max-w-[1180px] px-5 py-16 md:px-8 md:py-24">
+          <h2 className="font-display text-4xl font-extrabold tracking-tight sm:text-6xl">Ostatnie realizacje</h2>
+          {realizations.length === 0 ? (
+            <>
+              <p className="mt-4 max-w-[48ch]">
+                Zdjęcia konkretnych napraw pojawią się tu dopiero, gdy będą. Kafle poniżej to zakres prac, nie wykonane zlecenia.
+              </p>
+              <ul className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-3">
+                {frames.map((frame) => (
+                  <li key={frame.id} className="flex aspect-[4/3] flex-col justify-end border border-line bg-card p-4 text-ink">
+                    <frame.art className="mb-3 h-24 w-full" />
+                    <span className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">{frame.label}</span>
+                    <span className="mt-1 text-sm text-muted">Przykładowa grafika, nie zdjęcie naprawy</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {realizations.map((item) => (
+                <li key={item.id} className="bg-ink text-canvas">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={item.image} alt={item.imageAlt} className="aspect-[4/3] w-full object-cover" />
+                  <p className="p-4 font-display text-xl font-bold">{item.title}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+
+      <div className="ribbon" aria-hidden="true">
+        <div className="ribbon-track">
+          {Array.from({ length: 8 }, (_, index) => (
+            <span key={index} className={index >= 4 ? "ribbon-clone" : undefined}>
+              {ribbon}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <section id="faq" className="mx-auto max-w-[1180px] px-5 py-16 md:px-8 md:py-24">
+        <h2 className="font-display text-4xl font-extrabold tracking-tight sm:text-6xl">Pytania</h2>
+        <div className="mt-8 border-b border-ink">
           {faq.map((item) => (
-            <details key={item.id} className="group py-1">
-              <summary className="cursor-pointer list-none py-3 font-medium marker:content-none [&::-webkit-details-marker]:hidden">
-                <span className="flex items-start justify-between gap-4">
-                  {item.question}
-                  <span aria-hidden="true" className="text-accent-deep group-open:rotate-45">+</span>
-                </span>
+            <details key={item.id} className="border-t border-ink">
+              <summary className="cursor-pointer list-none py-5 font-display text-xl font-bold marker:content-none sm:text-2xl [&::-webkit-details-marker]:hidden">
+                {item.question}
               </summary>
-              <p className="pb-3 text-sm text-muted">{item.answer}</p>
+              <p className="max-w-[62ch] pb-5">{item.answer}</p>
             </details>
           ))}
         </div>
       </section>
 
-      <section id="kontakt" className="mx-auto grid max-w-6xl items-center gap-6 px-4 py-10 md:px-6 lg:grid-cols-[1fr_220px]">
-        <div>
-          <h2 className="text-3xl font-semibold tracking-tight">Zadzwoń i opisz, co się stało.</h2>
-          {hasConfirmedPhone() ? (
-            <a href={company.phoneHref} className="mt-4 inline-block text-2xl font-semibold text-accent-deep">
+      <section id="kontakt" className="bg-ink text-canvas">
+        <div className="mx-auto max-w-[1180px] px-5 py-16 md:px-8 md:py-24">
+          <h2 className="max-w-[14ch] font-display text-4xl leading-none font-extrabold tracking-tight sm:text-6xl">
+            Zadzwoń i opisz, co się stało.
+          </h2>
+          {hasConfirmedPhone(company) ? (
+            <a href={company.phoneHref} className="sticker mt-8 text-3xl sm:text-5xl">
               {company.phoneDisplay}
             </a>
           ) : (
-            <p className="mt-3 text-muted">Numer telefonu nie jest jeszcze uzupełniony.</p>
+            <p className="mt-6 max-w-[36ch] text-lg">Numer telefonu nie jest jeszcze uzupełniony.</p>
           )}
-          {hasConfirmedEmail() ? (
-            <a href={`mailto:${company.email}`} className="mt-2 block text-muted">
+          {hasConfirmedEmail(company) ? (
+            <a href={`mailto:${company.email}`} className="mt-4 block text-lg underline underline-offset-4">
               {company.email}
             </a>
           ) : null}
-          <p className="mt-3 text-sm text-muted">{company.city}. Adresu punktu nie podajemy, bo go nie ma w danych.</p>
+          <p className="mt-6 max-w-[42ch] text-sm">
+            {company.city}. Adresu punktu nie podajemy, bo go nie ma w danych.
+          </p>
+          <a href={callHref(company)} className="mt-8 inline-block bg-accent px-5 py-3 font-display font-bold text-ink lowercase">
+            zadzwoń
+          </a>
         </div>
-        <PhoneArt className="mx-auto h-44" />
       </section>
     </>
   );

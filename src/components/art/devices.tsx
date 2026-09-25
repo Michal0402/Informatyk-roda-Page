@@ -3,7 +3,8 @@ type ArtProps = {
 };
 
 function frame(className: string | undefined) {
-  return `text-accent-deep ${className ?? ""}`;
+  if (className?.includes("text-")) return className;
+  return `text-accent-deep ${className ?? ""}`.trim();
 }
 
 export function LaptopArt({ className }: ArtProps) {

@@ -1,37 +1,30 @@
-import { company, hasConfirmedPhone, publicationReady } from "@/config/company";
+import type { Company } from "@/config/company";
+import { publicationReady } from "@/config/company";
 
 export const navItems = [
-  { href: "/serwis-komputerowy-sroda-wielkopolska", label: "Komputery" },
-  { href: "/serwis-telefonow-sroda-wielkopolska", label: "Telefony" },
-  { href: "/#cennik", label: "Cennik" },
-  { href: "/#realizacje", label: "Realizacje" },
-  { href: "/#faq", label: "FAQ" },
-  { href: "/#kontakt", label: "Kontakt" },
+  { href: "/", label: "start" },
+  { href: "/serwis-komputerowy-sroda-wielkopolska", label: "komputery" },
+  { href: "/serwis-telefonow-sroda-wielkopolska", label: "telefony" },
+  { href: "/#cennik", label: "cennik" },
+  { href: "/#kontakt", label: "kontakt" },
 ] as const;
 
-export function callHref() {
-  return hasConfirmedPhone() ? company.phoneHref : "/#kontakt";
-}
-
-export function siteUrl(path = "/") {
-  if (!company.domain) return undefined;
-  const base = `https://${company.domain.replace(/\/$/, "")}`;
+export function siteUrl(domain: string, path = "/") {
+  if (!domain.trim()) return undefined;
+  const base = `https://${domain.replace(/\/$/, "")}`;
   return path === "/" ? `${base}/` : `${base}${path}`;
 }
 
-export function pageMeta(input: {
-  title: string;
-  description: string;
-  path: string;
-}) {
-  const url = siteUrl(input.path);
+export function pageMeta(
+  input: { title: string; description: string; path: string },
+  company: Company,
+) {
+  const url = siteUrl(company.domain, input.path);
   return {
     title: input.title,
     description: input.description,
     alternates: url ? { canonical: input.path } : undefined,
-    robots: publicationReady()
-      ? { index: true, follow: true }
-      : { index: false, follow: false },
+    robots: publicationReady(company) ? { index: true, follow: true } : { index: false, follow: false },
     openGraph: {
       title: input.title,
       description: input.description,

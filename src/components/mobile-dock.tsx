@@ -1,38 +1,36 @@
 import Link from "next/link";
-import { company, hasConfirmedPhone } from "@/config/company";
 
-export function MobileDock() {
+export function MobileDock({ callTarget, phoneDisplay }: { callTarget: string; phoneDisplay: string }) {
+  const dial = phoneDisplay.length > 0;
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-card/95 pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-ink bg-ink pb-[env(safe-area-inset-bottom)] text-canvas md:hidden"
       aria-label="Szybkie akcje"
     >
-      <ul className="grid grid-cols-3 text-center text-sm font-medium">
+      <ul className="grid grid-cols-3 text-center text-sm font-medium lowercase">
         <li>
-          {hasConfirmedPhone() ? (
-            <a className="block px-2 py-3 text-accent-deep" href={company.phoneHref}>
-              Zadzwoń
+          {dial ? (
+            <a className="block bg-accent px-2 py-3 text-ink" href={callTarget}>
+              zadzwoń
             </a>
           ) : (
-            <Link className="block px-2 py-3 text-accent-deep" href="/#kontakt">
-              Zadzwoń
+            <Link className="block bg-accent px-2 py-3 text-ink" href={callTarget}>
+              zadzwoń
             </Link>
           )}
         </li>
         <li>
-          <Link className="block px-2 py-3 text-ink" href="/#uslugi">
-            Usługi
+          <Link className="block px-2 py-3" href="/#uslugi">
+            usługi
           </Link>
         </li>
         <li>
-          <Link className="block px-2 py-3 text-ink" href="/#cennik">
-            Cennik
+          <Link className="block px-2 py-3" href="/#cennik">
+            cennik
           </Link>
         </li>
       </ul>
-      {hasConfirmedPhone() ? (
-        <span className="sr-only">{company.phoneDisplay}</span>
-      ) : null}
+      {dial ? <span className="sr-only">{phoneDisplay}</span> : null}
     </nav>
   );
 }
